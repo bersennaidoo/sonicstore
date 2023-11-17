@@ -38,10 +38,12 @@ func (c *Client) Browse(url string) {
 	req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
 
 	fmt.Printf("Sending request...\n")
+	span.AddEvent("about to send a request")
 	res, err := client.Do(req)
 	if err != nil {
 		panic(err)
 	}
+	span.AddEvent("request sent", trace.WithAttributes(attribute.String("url", url)))
 	span.SetAttributes(
 		attribute.Int("status.code", res.StatusCode),
 	)
