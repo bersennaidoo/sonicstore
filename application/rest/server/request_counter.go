@@ -7,7 +7,7 @@ import (
 
 var meter = otel.Meter("sonic-service-meter")
 
-// Configures counter instrument for counter incoming requests.
+// Configures counter instrument for counting incoming requests.
 func meterCounter() metric.Int64Counter {
 
 	apiCounter, err := meter.Int64Counter(
