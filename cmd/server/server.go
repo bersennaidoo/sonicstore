@@ -19,6 +19,16 @@ func main() {
 		}
 	}()
 
+	mp, err := opentel.InitMeter()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		if err := mp.Shutdown(context.Background()); err != nil {
+			log.Printf("Error shutting down meter provider: %v", err)
+		}
+	}()
+
 	srv := server.Server{}
 	srv.Run()
 }

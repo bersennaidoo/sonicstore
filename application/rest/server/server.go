@@ -15,6 +15,8 @@ type Server struct{}
 
 func (s *Server) Welcome(w http.ResponseWriter, req *http.Request) {
 	//tr := otel.Tracer("sonicstore/server")
+	apiCounter := meterCounter()
+	apiCounter.Add(req.Context(), 1)
 	ctx := req.Context()
 	span := trace.SpanFromContext(ctx)
 

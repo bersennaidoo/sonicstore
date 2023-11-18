@@ -11,6 +11,7 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 	semconv "go.opentelemetry.io/otel/semconv/v1.20.0"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -41,8 +42,11 @@ func (c *Client) Browse(url string) {
 	span.AddEvent("about to send a request")
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		//panic(err)
 	}
+	span.SetStatus(codes.Ok, "200")
 	span.AddEvent("request sent", trace.WithAttributes(attribute.String("url", url)))
 	span.SetAttributes(
 		attribute.Int("status.code", res.StatusCode),
